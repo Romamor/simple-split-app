@@ -1,6 +1,8 @@
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+}
 // settings.gradle.kts
 rootProject.name = "split-expenses-app"
 
 include(":backend")
-include(":telegram-bot")
-include(":android-app:app")
+include(":android-app")
