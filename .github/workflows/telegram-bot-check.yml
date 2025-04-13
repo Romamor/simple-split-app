@@ -1,25 +1,25 @@
-name: Android Check
+name: Telegram Bot Check
 
 on:
   push:
     branches: [ master, develop ]
     paths:
-      - 'android-app/**'
-      - '.github/workflows/android-*.yml'
+      - 'telegram-bot/**'
+      - '.github/workflows/telegram-*.yml'
       - 'settings.gradle.kts'
       - 'gradle.properties'
   pull_request:
     branches: [ master, develop ]
     paths:
-      - 'android-app/**'
-      - '.github/workflows/android-*.yml'
+      - 'telegram-bot/**'
+      - '.github/workflows/telegram-*.yml'
       - 'settings.gradle.kts'
       - 'gradle.properties'
 
 jobs:
-  android-check:
+  telegram-bot-check:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -41,32 +41,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-common-
 
-      # Специфичный кэш для backend
+      # Специфичный кэш для бота
       - name: Setup Android Cache
         uses: actions/cache@v3
         with:
           path: |
-            android-app/.gradle
-            android-app/build
-          key: ${{ runner.os }}-gradle-android-app-${{ hashFiles('android-app/**/*.gradle*') }}-${{ github.sha }}
+            telegram-bot/.gradle
+            telegram-bot/build
+          key: ${{ runner.os }}-gradle-telegram-bot-${{ hashFiles('telegram-bot/**/*.gradle*') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-gradle-android-app-${{ hashFiles('android-app/**/*.gradle*') }}-
-            ${{ runner.os }}-gradle-android-app-
+            ${{ runner.os }}-gradle-telegram-bot-${{ hashFiles('telegram-bot/**/*.gradle*') }}-
+            ${{ runner.os }}-gradle-telegram-bot-
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./backend/gradlew
+        run: chmod +x ./telegram-bot/gradlew
 
       - name: Run ktlint
-        run: cd backend && ./gradlew ktlintCheck
+        run: cd telegram-bot && ./gradlew ktlintCheck
 
       - name: Run tests
-        run: cd backend && ./gradlew test
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./android-app/gradlew
-
-      - name: Run lint
-        run: cd android-app && ./gradlew lintDebug
-
-      - name: Run tests
-        run: cd android-app && ./gradlew testDebugUnitTest
+        run: cd telegram-bot && ./gradlew test

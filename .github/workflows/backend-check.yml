@@ -1,23 +1,25 @@
-name: Android Check
+name: Backend Check
 
 on:
   push:
     branches: [ master, develop ]
     paths:
-      - 'android-app/**'
-      - '.github/workflows/android-*.yml'
+      - 'backend/**'
+      - '.github/workflows/backend-*.yml'
       - 'settings.gradle.kts'
       - 'gradle.properties'
+      - '!backend/README.md'
   pull_request:
     branches: [ master, develop ]
     paths:
-      - 'android-app/**'
-      - '.github/workflows/android-*.yml'
+      - 'backend/**'
+      - '.github/workflows/backend-*.yml'
       - 'settings.gradle.kts'
       - 'gradle.properties'
+      - '!backend/README.md'
 
 jobs:
-  android-check:
+  backend-check:
     runs-on: ubuntu-latest
     
     steps:
@@ -42,16 +44,16 @@ jobs:
             ${{ runner.os }}-gradle-common-
 
       # Специфичный кэш для backend
-      - name: Setup Android Cache
+      - name: Setup Backend Cache
         uses: actions/cache@v3
         with:
           path: |
-            android-app/.gradle
-            android-app/build
-          key: ${{ runner.os }}-gradle-android-app-${{ hashFiles('android-app/**/*.gradle*') }}-${{ github.sha }}
+            backend/.gradle
+            backend/build
+          key: ${{ runner.os }}-gradle-backend-${{ hashFiles('backend/**/*.gradle*') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-gradle-android-app-${{ hashFiles('android-app/**/*.gradle*') }}-
-            ${{ runner.os }}-gradle-android-app-
+            ${{ runner.os }}-gradle-backend-${{ hashFiles('backend/**/*.gradle*') }}-
+            ${{ runner.os }}-gradle-backend-
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./backend/gradlew
@@ -61,12 +63,3 @@ jobs:
 
       - name: Run tests
         run: cd backend && ./gradlew test
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./android-app/gradlew
-
-      - name: Run lint
-        run: cd android-app && ./gradlew lintDebug
-
-      - name: Run tests
-        run: cd android-app && ./gradlew testDebugUnitTest
