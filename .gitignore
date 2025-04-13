@@ -49,3 +49,4 @@ logs/
 # Database
 *.db
 *.db-journal
+.DS_Store
